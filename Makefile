@@ -1,4 +1,20 @@
 #
+# Operating System Settings
+#
+ifeq ($(OSTYPE),cygwin)
+	CLEANUP=rm -f
+	MKDIR=mkdir -p
+	TARGET_EXTENSION=out
+else ifeq ($(OS),Windows_NT)
+	CLEANUP=del /F /Q
+	MKDIR=mkdir
+	TARGET_EXTENSION=exe
+else
+	CLEANUP=rm -f
+	MKDIR=mkdir -p
+	TARGET_EXTENSION=out
+endif
+#
 # Compiler flags
 #
 CFLAGS = -Wall -Wextra -Iinclude
@@ -122,13 +138,13 @@ $(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
 
 # Creates build/$(BIN_PREFIX)/lib
 prep-library:
-	@mkdir -p $(BUILD_DIR)/$(LIB_PREFIX)
+	$(MKDIR) $(BUILD_DIR)/$(LIB_PREFIX)
 
 # Creates build/$(BIN_PREFIX)
 prep:
-	@mkdir -p $(BUILD_DIR)/$(BIN_PREFIX)
+	$(MKDIR) $(BUILD_DIR)/$(BIN_PREFIX)
 
 remake: clean all
 
 clean:
-	rm -f $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
+	$(CLEANUP) $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
