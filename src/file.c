@@ -1,18 +1,4 @@
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#include <tchar.h>
-#include <fileapi.h>
-#else
-#include <sys/stat.h>
-#include <sys/types.h>
-#endif
+#include "file.h"
 
 #ifdef _WIN32
 bool file_exists(HANDLE* fp) {
@@ -23,7 +9,7 @@ bool file_exists(HANDLE* fp) {
   return true;
 }
 
-off_t file_size (const char* filename) {
+LARGE_INTEGER file_size (const char* filename) {
   HANDLE file;
   LARGE_INTEGER file_size;
   char *buffer;
