@@ -47,7 +47,7 @@ void write_file_should_not_be_null() {
     char* path = "build/results/example.txt";
     /* Remove previous runs */
     FILE* examplep = fopen(path, "rb");
-    if (file_exists(examplep)) {
+    if (examplep != NULL) {
         fclose(examplep);
         puts("Deleting previous example.txt file\n");
         int success = remove(path);
