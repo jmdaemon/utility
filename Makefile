@@ -1,150 +1,106 @@
-#
-# Operating System Settings
-#
-ifeq ($(OSTYPE),cygwin)
-	CLEANUP=rm -f
-	MKDIR=mkdir -p
-	TARGET_EXTENSION=out
-else ifeq ($(OS),Windows_NT)
-	CLEANUP=del /F /Q
-	MKDIR=mkdir
-	TARGET_EXTENSION=exe
+ifeq ($(OS),Windows_NT)
+  ifeq ($(shell uname -s),) # not in a bash-like shell
+	CLEANUP = del /F /Q
+	MKDIR = mkdir
+  else # in a bash-like shell, like msys
+	CLEANUP = rm -f
+	MKDIR = mkdir -p
+  endif
+	TARGET_EXTENSION=.exe
 else
-	CLEANUP=rm -f
-	MKDIR=mkdir -p
+	CLEANUP = rm -f
+	MKDIR = mkdir -p
 	TARGET_EXTENSION=out
 endif
-#
-# Compiler flags
-#
-CFLAGS = -Wall -Wextra -Iinclude
-LDFLAGS = 
 
-#
-# Prefixes
-#
-# These are used to generate the build structure:
-# build/{debug,release}/{bin, lib, subprojects}
-BUILD_PREFIX = build
-SRC_PREFIX = src
-BIN_PREFIX = bin
+.PHONY: clean
+.PHONY: test
 
-#
-# Project files
-#
-# Build the project as an executable binary
-#
-# Note: $(SRCS:.c=.o) replaces all *.c sources with *.o extensions
-SRCS = command.c file.c
-OBJS = $(SRCS:.c=.o)
-#EXE  = bytesize
+PATHU = subprojects/unity/src/
+PATHS = src/
+PATHT = test/
+PATHB = build/
+PATHD = build/depends/
+PATHO = build/objs/
+PATHR = build/results/
 
-#
-# Library
-#
-# Builds the project as a library
-#
-# Note: that we cannot reuse the same sources as the 
-# binary target, since GNU Argp cannot be compiled
-# as a shared library.
-#CFLAGS_LIB = -fPIC -g
-CFLAGS_LIB = -fPIC
-LDFLAGS_LIB = -shared
-LIB_SRCS = $(SRCS)
-LIB_OBJS = $(LIB_SRCS:.c=.o)
-LIB = libutility.so
-LIB_PREFIX = lib
+INCLUDES = include/
 
-.PHONY: all clean prep debug release lib remake
+BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
 
-# Default build
-all: prep release
+SRCT = $(wildcard $(PATHT)*.c)
 
-# Set install
-ifeq ($(PREFIX),)
-    PREFIX := /usr/local
-endif
+COMPILE=gcc -c
+LINK=gcc
+DEPEND=gcc -MM -MG -MF
+CFLAGS=-I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 
-#
-# Build settings
-#
+#RESULTS = $(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(SRCT) )
+RESULTS = $(patsubst $(PATHT)test_%.c,$(PATHR)test_%.txt,$(SRCT) )
 
-# Release build settings
-TARGET:=release
-TARGET_FLAGS:= -O3 -DNDEBUG $(LDFLAGS)
+PASSED = `grep -s PASS $(PATHR)*.txt`
+FAIL = `grep -s FAIL $(PATHR)*.txt`
+IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
-# Debug build settings
-ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
-TARGET = debug
-TARGET_FLAGS = -g -O0 -DDEBUG $(LDFLAGS)
-endif
+test: $(BUILD_PATHS) $(RESULTS)
+	@echo "-----------------------\nIGNORES:\n-----------------------"
+	@echo "$(IGNORE)"
+	@echo "-----------------------\nFAILURES:\n-----------------------"
+	@echo "$(FAIL)"
+	@echo "-----------------------\nPASSED:\n-----------------------"
+	@echo "$(PASSED)"
+	@echo "\nDONE"
 
-# Library build settings
-# TARGET_FLAGS: 	The library flags to build the library
-# BUILD_LIB: 			The directory of the target library
-# BUILD_LIB_OBJS: The object files of the library target
-ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
-TARGET_FLAGS = $(LDFLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
-BUILD_LIB = $(BUILD_DIR)/$(LIB_PREFIX)/$(LIB)
-BUILD_LIB_OBJS = $(addprefix $(BUILD_DIR)/, $(LIB_OBJS))
-endif
+# Create test results
+$(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
+	-./$< > $@ 2>&1
 
+#$(PATHB)Test%.$(TARGET_EXTENSION): $(PATHO)Test%.o $(PATHO)%.o $(PATHU)unity.o #$(PATHD)Test%.d
+#$(PATHB)Test%.$(TARGET_EXTENSION): $(PATHO)Test%.o $(PATHO)%.o $(PATHU)unity.o $(PATHD)Test%.d
+#$(PATHB)Test%.$(TARGET_EXTENSION): $(PATHO)Test%.o $(PATHO)%.o $(PATHU)unity.o #$(PATHD)Test%.d
+#$(PATHB)Test%.$(TARGET_EXTENSION): $(PATHO)Test%.o $(PATHO)%.o $(PATHU)unity.o #$(PATHD)Test%.d
 
-# Executable settings
-# BUILD_DIR: 	The directory of the target.
-# BUILD_EXEC: The output directory of the binary target
-# BUILD_OBJS: The object files of the binary target
+#$(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o $(PATHD)test_%.d
+$(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o #$(PATHD)test_%.d
+	$(LINK) -o $@ $^
 
-BUILD_DIR = $(BUILD_PREFIX)/$(TARGET)
-BUILD_EXEC= $(BUILD_DIR)/$(BIN_PREFIX)/$(EXE)
-BUILD_OBJS= $(addprefix $(BUILD_DIR)/, $(OBJS))
+# Compile unity sources
+$(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
+	$(COMPILE) $(CFLAGS) $< -o $@
 
-# Rules
+# Compile files in src directory
+$(PATHO)%.o:: $(PATHS)%.c
+	$(COMPILE) $(CFLAGS) $< -o $@
 
-## Install/Uninstall
-install: release $(BUILD_EXEC)
-	install $(BUILD_EXEC) $(DESTDIR)$(PREFIX)/bin/$(EXE)
+# Compile files in test directory
+$(PATHO)%.o:: $(PATHT)%.c
+	$(COMPILE) $(CFLAGS) $< -o $@
 
-uninstall: release $(BUILD_EXEC)
-	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXE)
+# Create a depends directory
+$(PATHD)%.d:: $(PATHT)%.c
+	$(DEPEND) $@ $<
 
-#
-# Library builds
-#
-lib: prep-library $(BUILD_LIB)
+# Build paths
+$(PATHB):
+	$(MKDIR) $(PATHB)
 
-# Compiles the shared library target and its object files
-$(BUILD_LIB): $(BUILD_LIB_OBJS)
-	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $@ $^
+$(PATHD):
+	$(MKDIR) $(PATHD)
 
-#
-# Debug/Release builds
-#
-debug release: prep $(BUILD_EXEC)
+$(PATHO):
+	$(MKDIR) $(PATHO)
 
-# Compile the executable binary target and its object files
-$(BUILD_EXEC): $(BUILD_OBJS)
-	$(CC) $(CFLAGS) $(TARGET_FLAGS) -o $(BUILD_EXEC) $^
+$(PATHR):
+	$(MKDIR) $(PATHR)
 
-# Compile all object targets in $(BUILD_DIR)
-$(BUILD_DIR)/%.o: $(SRC_PREFIX)/%.c
-	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
-
-#
-# Other rules
-#
-
-# prep, prep-lirary: Creates the directories for the bin and lib targets
-
-# Creates build/$(BIN_PREFIX)/lib
-prep-library:
-	$(MKDIR) $(BUILD_DIR)/$(LIB_PREFIX)
-
-# Creates build/$(BIN_PREFIX)
-prep:
-	$(MKDIR) $(BUILD_DIR)/$(BIN_PREFIX)
-
-remake: clean all
-
+# Remove output files
 clean:
-	$(CLEANUP) $(RELEXE) $(RELOBJS) $(DBGEXE) $(DBGOBJS)
+	$(CLEANUP) $(PATHO)*.o
+	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
+	$(CLEANUP) $(PATHR)*.txt
+
+# Keep test results
+.PRECIOUS: $(PATHB)Test%.$(TARGET_EXTENSION)
+.PRECIOUS: $(PATHD)%.d
+.PRECIOUS: $(PATHO)%.o
+.PRECIOUS: $(PATHR)%.txt
