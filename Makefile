@@ -40,10 +40,29 @@ SRCT = $(wildcard $(PATHT)*.c)
 # Compile options
 #
 
+CFLAGS = -Wall -Wextra
+LDFLAGS = 
+
 COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF
 CFLAGS=-I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
+
+#
+# Library
+#
+
+CFLAGS_LIB = -fPIC -g
+LDFLAGS_LIB = -shared
+LIB_SRCS = file.c command.c
+LIB_OBJS = $(LIB_SRCS:.c=.o)
+LIB = libutility.so
+LIB_PREFIX = lib
+
+
+#
+# Unit Tests
+#
 
 # Note: Our files will be named:
 # [source].c, test_[source].c
@@ -55,11 +74,45 @@ PASSED = `grep -s PASS $(PATHR)*.txt`
 FAIL = `grep -s FAIL $(PATHR)*.txt`
 IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
+#
+# Build settings
+# 
+
+# Release build settings
+# Set release to default configuration
+TARGET:=release
+TARGET_FLAGS:= -O3 -DNDEBUG $(LDFLAGS)
+
+# Debug build settings
+# Set debug as an optional switch
+ifeq ($(filter debug,$(MAKECMDGOALS)),debug)
+TARGET=debug
+TARGET_FLAGS= -g -O0 -DDEBUG $(LDFLAGS)
+endif
+
+# Create build/{debug, release} paths
+BUILD_PATH = $(PATHB)/$(TARGET)
+
+# Library build settings
+# -------------
+# TARGET_FLAGS: 	Release or debug flags
+# BUILD_LIB: 			The directory of the target library
+# BUILD_LIB_OBJS: The object files of the library target
+# --------------
+# LIBRARY_FLAGS: 	The library flags to build the library
+ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
+LIBRARY_FLAGS = $(LDFLAGS) $(TARGET_FLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
+BUILD_PATHL = $(PATHB)$(LIB_PREFIX)/$(LIB)
+BUILD_LIB_OBJS = $(addprefix $(PATHB), $(LIB_OBJS))
+endif
+
 # 
 # Rules
 #
 
-.PHONY: clean test
+# Unit Tests
+
+.PHONY: clean clean-test clean-lib test lib 
 
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"
@@ -95,6 +148,17 @@ $(PATHD)%.d:: $(PATHT)%.c
 	$(DEPEND) $@ $<
 
 #
+# Library Builds
+#
+
+# Make the build paths for the library
+lib: $(BUILD_PATHL) $(BUILD_LIB)
+
+# Compiles the shared library target and its object files
+$(BUILD_LIB): $(BUILD_LIB_OBJS) 
+	$(CC) $(CFLAGS) $(LIBRARY_FLAGS) -o $@ $^
+
+#
 # Other rules
 #
 
@@ -115,6 +179,20 @@ $(PATHO):
 # Create build/results
 $(PATHR):
 	$(MKDIR) $(PATHR)
+
+# Create build/{debug, release}
+$(BUILD_PATH):
+	$(MKDIR) $(BUILD_PATH)
+
+# Create build/{debug, release}/lib
+$(BUILD_PATHL):
+	$(MKDIR) $(BUILD_PATHL)
+
+clean: clean-test clean-lib
+
+clean-lib:
+	$(CLEANUP) $(BUILD_PATHL)*.so
+	$(CLEANUP) $(BUILD_PATH)*.o
 
 # Remove output files for tests
 clean-test:
