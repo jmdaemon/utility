@@ -59,7 +59,6 @@ LIB_OBJS = $(LIB_SRCS:.c=.o)
 LIB = libutility.so
 LIB_PREFIX = lib
 
-
 #
 # Unit Tests
 #
