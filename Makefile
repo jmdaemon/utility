@@ -1,3 +1,6 @@
+#
+# Operating Systems
+#
 ifeq ($(OS),Windows_NT)
   ifeq ($(shell uname -s),) # not in a bash-like shell
 	CLEANUP = del /F /Q
@@ -13,11 +16,11 @@ else
 	TARGET_EXTENSION=out
 endif
 
-.PHONY: clean test
 
 #
 # Directories
 #
+# build/depends, build/objs, build/results are all used for building the unit tests
 
 PATHU = subprojects/unity/src/
 PATHS = src/
@@ -36,12 +39,13 @@ SRCT = $(wildcard $(PATHT)*.c)
 #
 # Compile options
 #
+
 COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF
 CFLAGS=-I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
 
-# Our files will be named:
+# Note: Our files will be named:
 # [source].c, test_[source].c
 # Due to these substitutions they must be named like this
 # in order for the tests to work and compile
@@ -54,6 +58,8 @@ IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 # 
 # Rules
 #
+
+.PHONY: clean test
 
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nIGNORES:\n-----------------------"
@@ -68,6 +74,7 @@ test: $(BUILD_PATHS) $(RESULTS)
 $(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
 	-./$< > $@ 2>&1
 
+# Link unit tests with the unity test framework and our sources
 $(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o
 	$(LINK) -o $@ $^
 
@@ -87,27 +94,36 @@ $(PATHO)%.o:: $(PATHT)%.c
 $(PATHD)%.d:: $(PATHT)%.c
 	$(DEPEND) $@ $<
 
+#
+# Other rules
+#
+
 # Build paths
+
+# Create build/
 $(PATHB):
 	$(MKDIR) $(PATHB)
 
+# Create build/depends
 $(PATHD):
 	$(MKDIR) $(PATHD)
 
+# Create build/objs
 $(PATHO):
 	$(MKDIR) $(PATHO)
 
+# Create build/results
 $(PATHR):
 	$(MKDIR) $(PATHR)
 
-# Remove output files
-clean:
+# Remove output files for tests
+clean-test:
 	$(CLEANUP) $(PATHO)*.o
 	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
 	$(CLEANUP) $(PATHR)*.txt
 
-# Keep test results
-.PRECIOUS: $(PATHB)Test%.$(TARGET_EXTENSION)
+# Keep test results & output
+.PRECIOUS: $(PATHB)test_%.$(TARGET_EXTENSION)
 .PRECIOUS: $(PATHD)%.d
 .PRECIOUS: $(PATHO)%.o
 .PRECIOUS: $(PATHR)%.txt
