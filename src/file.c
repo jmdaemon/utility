@@ -115,7 +115,7 @@ char* read_file(char* path) {
   return contents;
 }
 
-void* write_file(char* path, char* contents) {
+void write_file(char* path, char* contents) {
    FILE *fp = fopen(path, "w");
 
    /* Check that file could be created */
@@ -126,6 +126,5 @@ void* write_file(char* path, char* contents) {
 
    fprintf(fp, "%s", contents);
    fclose(fp);
-   return 0;
 }
 #endif
