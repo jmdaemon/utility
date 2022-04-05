@@ -87,12 +87,18 @@ bool under_limit(char* path, off_t size) {
 /**
   * Read a file into a character array
   * ----------------------------------
+  * Note that this function assumes that the file exists
+  * so make sure to check it with file_exists beforehand
+  *
   * path: A file path
   * returns: The file contents as a character array
   */
 char* read_file(char* path) {
 
   FILE *fp = fopen(path, "rb");
+  /* Here is where you would check if the file exists */
+  /* For now we'll assume if you open the file that it will
+  exist */
   off_t filesize = file_size(path);
 
   /* Allocate a buffer for the file contents on the heap */
