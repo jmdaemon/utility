@@ -13,10 +13,11 @@ void tearDown(void) {
 }
 
 void file_size_should_return_correct_size() {
-    off_t filesize = file_size("../LICENSE");
-    printf("%ld\n", filesize);
-    TEST_ASSERT_TRUE(filesize == 34);
-    TEST_ASSERT_TRUE(filesize == 0);
+    const off_t result = file_size("LICENSE");
+    printf("Result: %ld\n", result);
+    const off_t expected = 34524;
+    printf("Expected: %ld\n", expected);
+    TEST_ASSERT_TRUE(result == expected);
 }
 
 int main(void) {
