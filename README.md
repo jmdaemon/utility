@@ -28,7 +28,9 @@ LDFLAGS = -Lsubprojects/utility/build/release/lib -llibutility
 
 ## CMake
 
-Assume that utility is in subprojects directory.
+This assumes that utility is in subprojects directory.
+
+You can add utility with:
 
 ``` CMake
 set(UTILITY_HEADERS subprojects/utility/include)
