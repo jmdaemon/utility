@@ -43,11 +43,34 @@ void read_file_should_not_be_null() {
     free(contents);
 }
 
+void write_file_should_not_be_null() {
+    char* path = "build/results/example.txt";
+    /* Remove previous runs */
+    FILE* examplep = fopen(path, "rb");
+    if (file_exists(examplep)) {
+        fclose(examplep);
+        puts("Deleting previous example.txt file\n");
+        int success = remove(path);
+        if (success == 0)
+            printf("Deleted %s\n", path);
+        else
+            printf("Unable to delete %s\n", path);
+
+    }
+    char* contents = "This file should not be null";
+    write_file(path, contents);
+    FILE* fp = fopen(path, "rb");
+    TEST_ASSERT_TRUE(file_exists(fp));
+    fclose(fp);
+}
+
+/* Main runner */
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(file_size_should_return_correct_size);
     RUN_TEST(file_exists_should_return_true);
     RUN_TEST(file_size_should_be_under_4gib);
     RUN_TEST(read_file_should_not_be_null);
+    RUN_TEST(write_file_should_not_be_null);
     return UNITY_END();
 }
