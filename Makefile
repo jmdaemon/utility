@@ -43,6 +43,10 @@ SRCT = $(wildcard $(PATHT)*.c)
 CFLAGS = -Wall -Wextra
 LDFLAGS = 
 
+# Compiler Flags:
+# -MM : Output single header dependencies for the compile files
+# -MG : Run without being able to run into headers gcc can't find
+# -MF : Write header dependencies to a file
 COMPILE=gcc -c
 LINK=gcc
 DEPEND=gcc -MM -MG -MF
@@ -121,6 +125,9 @@ test: $(BUILD_PATHS) $(RESULTS)
 	@echo "-----------------------\nPASSED:\n-----------------------"
 	@echo "$(PASSED)"
 	@echo "\nDONE"
+
+
+# Rules for finding source files in sub directories
 
 # Create test results
 $(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
