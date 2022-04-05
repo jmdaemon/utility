@@ -114,4 +114,18 @@ char* read_file(char* path) {
   contents[filesize] = 0;
   return contents;
 }
+
+void* write_file(char* path, char* contents) {
+   FILE *fp = fopen(path, "w");
+
+   /* Check that file could be created */
+   if (!file_exists(fp)) {
+     printf("Could not create file\n");
+     exit(1);
+   }
+
+   fprintf(fp, "%s", contents);
+   fclose(fp);
+   return 0;
+}
 #endif
