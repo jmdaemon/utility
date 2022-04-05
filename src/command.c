@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "command.h"
 
 /* Executes a command, and prints the output of the command */
 char* exec(const char* command, size_t size) {
