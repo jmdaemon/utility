@@ -35,6 +35,7 @@ void read_file_should_not_be_null() {
     /* Read file shouldn't be null on files 
     that exist */
     char* contents = read_file("LICENSE");
+    /*printf("Contents:\n%s", contents);*/
     TEST_ASSERT_NOT_NULL(contents);
     /* Since we allocated memory with malloc
        we must free the pointer here
