@@ -25,9 +25,16 @@ void file_exists_should_return_true() {
     TEST_ASSERT_TRUE(result == expected);
 }
 
+void file_size_should_be_under_4gib() {
+    const off_t limit  = 1024 * 1024 * 4;
+    const bool result = under_limit("LICENSE", limit);
+    TEST_ASSERT_TRUE(result);
+}
+
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(file_size_should_return_correct_size);
     RUN_TEST(file_exists_should_return_true);
+    RUN_TEST(file_size_should_be_under_4gib);
     return UNITY_END();
 }
