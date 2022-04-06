@@ -94,7 +94,8 @@ TARGET_FLAGS= -g -O0 -DDEBUG $(LDFLAGS)
 endif
 
 # Create build/{debug, release} paths
-BUILD_PATH = $(PATHB)/$(TARGET)
+#BUILD_PATH = $(PATHB)/$(TARGET)
+BUILD_PATH = $(PATHB)$(TARGET)
 
 # Library build settings
 # -------------
@@ -105,8 +106,14 @@ BUILD_PATH = $(PATHB)/$(TARGET)
 # LIBRARY_FLAGS: 	The library flags to build the library
 ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
 LIBRARY_FLAGS = $(LDFLAGS) $(TARGET_FLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
-BUILD_PATHL = $(PATHB)$(LIB_PREFIX)/$(LIB)
-BUILD_LIB_OBJS = $(addprefix $(PATHB), $(LIB_OBJS))
+#BUILD_PATHL = $(PATHB)$(LIB_PREFIX)/$(LIB)
+#BUILD_PATHL = ${BUILD_PATH}/$(LIB_PREFIX)/$(LIB)
+#BUILD_LIB_OBJS = $(addprefix $(PATHB), $(LIB_OBJS))
+#BUILD_PATHL = $(BUILD_PATH)/$(LIB_PREFIX)/$(LIB)
+#BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH), $(LIB_OBJS))
+BUILD_LIB = $(BUILD_PATH)/$(LIB_PREFIX)/$(LIB)
+#BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH)/$(LIB_PREFIX)/, $(LIB_OBJS))
+BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH)/, $(LIB_OBJS))
 endif
 
 # 
@@ -192,7 +199,7 @@ $(BUILD_PATH):
 
 # Create build/{debug, release}/lib
 $(BUILD_PATHL):
-	$(MKDIR) $(BUILD_PATHL)
+	$(MKDIR) $(BUILD_PATH)/$(LIB_PREFIX)
 
 clean: clean-test clean-lib
 
