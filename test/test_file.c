@@ -2,11 +2,11 @@
 #include "unity.h"
 
 void setUp(void) {
-    // set stuff up here
+    /* set stuff up here */
 }
 
 void tearDown(void) {
-    // clean stuff up here
+    /* clean stuff up here */
 }
 
 void file_size_should_return_correct_size() {
@@ -65,10 +65,7 @@ void write_file_should_not_be_null() {
     }
     const char* contents = "This file should not be null";
     write_file(path, contents);
-    /*FILE* fp = fopen(path, "rb");*/
-    /*TEST_ASSERT_TRUE(file_exists(fp));*/
     TEST_ASSERT_TRUE(file_exists(path));
-    /*fclose(fp);*/
 }
 
 /* Add tests for big files >4 GiB here */

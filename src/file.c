@@ -1,6 +1,13 @@
 #include "file.h"
 
+/*
+ * Note: Some of these functions require more testing on
+ * different platforms such as Windows in order to determine
+ * if they work more or less the same.
+ */
 #ifdef _WIN32
+
+/* Check to ensure this implementation works on windows */
 bool file_exists(const char* path) {
   HANDLE* fp = fopen(path, "rb");
   bool result = (fp == NULL) ? false : true;
