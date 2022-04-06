@@ -104,17 +104,21 @@ BUILD_PATH = $(PATHB)$(TARGET)
 # BUILD_LIB_OBJS: The object files of the library target
 # --------------
 # LIBRARY_FLAGS: 	The library flags to build the library
-ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
+
+#ifeq ($(filter lib,$(MAKECMDGOALS)),lib)
 LIBRARY_FLAGS = $(LDFLAGS) $(TARGET_FLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
 #BUILD_PATHL = $(PATHB)$(LIB_PREFIX)/$(LIB)
 #BUILD_PATHL = ${BUILD_PATH}/$(LIB_PREFIX)/$(LIB)
 #BUILD_LIB_OBJS = $(addprefix $(PATHB), $(LIB_OBJS))
 #BUILD_PATHL = $(BUILD_PATH)/$(LIB_PREFIX)/$(LIB)
 #BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH), $(LIB_OBJS))
-BUILD_LIB = $(BUILD_PATH)/$(LIB_PREFIX)/$(LIB)
+
+BUILD_PATHL = $(BUILD_PATH)/$(LIB_PREFIX)
+#BUILD_LIB = $(BUILD_PATH)/$(LIB_PREFIX)/$(LIB)
+BUILD_LIB = $(BUILD_PATHL)/$(LIB)
 #BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH)/$(LIB_PREFIX)/, $(LIB_OBJS))
 BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH)/, $(LIB_OBJS))
-endif
+#endif
 
 # 
 # Rules
@@ -165,11 +169,17 @@ $(PATHD)%.d:: $(PATHT)%.c
 #
 
 # Make the build paths for the library
+#lib: $(BUILD_PATHL) $(BUILD_LIB)
 lib: $(BUILD_PATHL) $(BUILD_LIB)
 
 # Compiles the shared library target and its object files
 $(BUILD_LIB): $(BUILD_LIB_OBJS) 
 	$(CC) $(CFLAGS) $(LIBRARY_FLAGS) -o $@ $^
+
+# Compile all object targets in $(BUILD_DIR)
+#$(BUILD_PATH)%.o: $(SRC_PREFIX)%.c
+$(BUILD_PATH)/%.o: $(PATHS)%.c
+	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
 
 #
 # Other rules
@@ -198,14 +208,16 @@ $(BUILD_PATH):
 	$(MKDIR) $(BUILD_PATH)
 
 # Create build/{debug, release}/lib
+#$(MKDIR) $(BUILD_PATH)/$(LIB_PREFIX)
 $(BUILD_PATHL):
-	$(MKDIR) $(BUILD_PATH)/$(LIB_PREFIX)
+	$(MKDIR) $(BUILD_PATHL)
 
 clean: clean-test clean-lib
 
+#$(CLEANUP) $(BUILD_PATH)/$(LIB_PREFIX)/$(LIB)
 clean-lib:
-	$(CLEANUP) $(BUILD_PATHL)*.so
-	$(CLEANUP) $(BUILD_PATH)*.o
+	$(CLEANUP) $(BUILD_LIB)
+	$(CLEANUP) $(BUILD_LIB_OBJS)
 
 # Remove output files for tests
 clean-test:
