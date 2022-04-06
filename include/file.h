@@ -22,10 +22,10 @@
 #endif
 
 #ifdef _WIN32
-bool file_exists(HANDLE* fp);
+bool file_exists(const char* path);
 LARGE_INTEGER file_size (const char* filename);
 #else
-bool file_exists(FILE* fp);
+bool file_exists(const char* path);
 off_t file_size (const char* filename);
 bool under_limit(const char* path, off_t size);
 char* read_file(const char* path);

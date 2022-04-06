@@ -1,12 +1,11 @@
 #include "file.h"
 
 #ifdef _WIN32
-bool file_exists(HANDLE* fp) {
-  if (fp == NULL) {
-    printf("File Not Found!\n");
-    return false;
-  }
-  return true;
+bool file_exists(const char* path) {
+  HANDLE* fp = fopen(path, "rb");
+  bool result = (fp == NULL) ? false : true;
+  fclose(fp);
+  return result;
 }
 
 LARGE_INTEGER file_size (const char* filename) {
@@ -39,12 +38,11 @@ LARGE_INTEGER file_size (const char* filename) {
   * fp: The file path to check
   * returns: True if the file is not null, and false otherwise
   */
-bool file_exists(FILE* fp) {
-  if (fp == NULL) {
-    printf("File Not Found!\n");
-    return false;
-  }
-  return true;
+bool file_exists(const char* path) {
+  FILE* fp = fopen(path, "rb");
+  bool result = (fp == NULL) ? false : true;
+  fclose(fp);
+  return result;
 }
 
 /**
@@ -155,9 +153,8 @@ char* read_slice(const char* path, off_t beg, off_t end) {
 
 void write_file(const char* path, const char* contents) {
    FILE *fp = fopen(path, "w");
-
    /* Check that file could be created */
-   if (!file_exists(fp)) {
+   if (fp == NULL) {
      printf("Could not create file\n");
      exit(1);
    }

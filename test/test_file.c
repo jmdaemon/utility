@@ -18,9 +18,7 @@ void file_size_should_return_correct_size() {
 }
 
 void file_exists_should_return_true() {
-    FILE* fp = fopen("LICENSE", "rb");
-    const bool result = file_exists(fp);
-    fclose(fp);
+    const bool result = file_exists("LICENSE");
     const bool expected = true;
     TEST_ASSERT_TRUE(result == expected);
 }
@@ -67,9 +65,10 @@ void write_file_should_not_be_null() {
     }
     const char* contents = "This file should not be null";
     write_file(path, contents);
-    FILE* fp = fopen(path, "rb");
-    TEST_ASSERT_TRUE(file_exists(fp));
-    fclose(fp);
+    /*FILE* fp = fopen(path, "rb");*/
+    /*TEST_ASSERT_TRUE(file_exists(fp));*/
+    TEST_ASSERT_TRUE(file_exists(path));
+    /*fclose(fp);*/
 }
 
 /* Add tests for big files >4 GiB here */
