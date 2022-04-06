@@ -93,7 +93,7 @@ bool under_limit(char* path, off_t size) {
   * path: A file path
   * returns: The file contents as a character array
   */
-char* read_file(char* path) {
+char* read_file(const char* path) {
 
   FILE *fp = fopen(path, "rb");
   /* Here is where you would check if the file exists */

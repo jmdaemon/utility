@@ -25,7 +25,7 @@ LARGE_INTEGER file_size (const char* filename);
 bool file_exists(FILE* fp);
 off_t file_size (const char* filename);
 bool under_limit(char* path, off_t size);
-char* read_file(char* path);
+char* read_file(const char* path);
 void write_file(char* path, char* contents);
 #endif
 
