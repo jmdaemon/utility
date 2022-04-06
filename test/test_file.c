@@ -34,7 +34,7 @@ void file_size_should_be_under_4gib() {
 void read_file_should_not_be_null() {
     /* Read file shouldn't be null on files 
     that exist */
-    char* contents = read_file("LICENSE");
+    const char* contents = read_file("LICENSE");
     /*printf("Contents:\n%s", contents);*/
     TEST_ASSERT_NOT_NULL(contents);
     /* Since we allocated memory with malloc
@@ -44,7 +44,7 @@ void read_file_should_not_be_null() {
 }
 
 void write_file_should_not_be_null() {
-    char* path = "build/results/example.txt";
+    const char* path = "build/results/example.txt";
     /* Remove previous runs */
     FILE* examplep = fopen(path, "rb");
     if (examplep != NULL) {
@@ -57,7 +57,7 @@ void write_file_should_not_be_null() {
             printf("Unable to delete %s\n", path);
 
     }
-    char* contents = "This file should not be null";
+    const char* contents = "This file should not be null";
     write_file(path, contents);
     FILE* fp = fopen(path, "rb");
     TEST_ASSERT_TRUE(file_exists(fp));

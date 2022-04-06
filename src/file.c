@@ -78,7 +78,7 @@ off_t file_size(const char *filename) {
   * size: The upper bound size limit
   * returns: True if the file is less than or equal to the upper bound and False otherwise
   */
-bool under_limit(char* path, off_t size) {
+bool under_limit(const char* path, off_t size) {
   size_t filesize = file_size(path);
   bool result = (filesize <= size) ? true : false;
   return result;
@@ -115,7 +115,7 @@ char* read_file(const char* path) {
   return contents;
 }
 
-void write_file(char* path, char* contents) {
+void write_file(const char* path, const char* contents) {
    FILE *fp = fopen(path, "w");
 
    /* Check that file could be created */

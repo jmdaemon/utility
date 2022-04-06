@@ -24,9 +24,9 @@ LARGE_INTEGER file_size (const char* filename);
 #else
 bool file_exists(FILE* fp);
 off_t file_size (const char* filename);
-bool under_limit(char* path, off_t size);
+bool under_limit(const char* path, off_t size);
 char* read_file(const char* path);
-void write_file(char* path, char* contents);
+void write_file(const char* path, const char* contents);
 #endif
 
 #endif // FILE_H
