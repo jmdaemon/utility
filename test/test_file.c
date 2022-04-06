@@ -34,12 +34,20 @@ void file_size_should_be_under_4gib() {
 void read_file_should_not_be_null() {
     /* Read file shouldn't be null on files 
     that exist */
-    const char* contents = read_file("LICENSE");
+    char* contents = read_file("LICENSE");
     /*printf("Contents:\n%s", contents);*/
     TEST_ASSERT_NOT_NULL(contents);
     /* Since we allocated memory with malloc
-       we must free the pointer here
-    */
+       we must free the pointer here */
+    free(contents);
+}
+
+void read_slice_should_not_be_null() {
+    char* contents = read_slice("LICENSE", 300, 400);
+    printf("Contents:\n%s\n", contents);
+    TEST_ASSERT_NOT_NULL(contents);
+    /* Since we allocated memory with malloc
+       we must free the pointer here */
     free(contents);
 }
 
@@ -71,6 +79,7 @@ int main(void) {
     RUN_TEST(file_exists_should_return_true);
     RUN_TEST(file_size_should_be_under_4gib);
     RUN_TEST(read_file_should_not_be_null);
+    RUN_TEST(read_slice_should_not_be_null);
     RUN_TEST(write_file_should_not_be_null);
     return UNITY_END();
 }

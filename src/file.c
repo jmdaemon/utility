@@ -115,6 +115,43 @@ char* read_file(const char* path) {
   return contents;
 }
 
+/**
+  * Read a file from a specified beg to an end
+  * ----------------------------------
+  *
+  * path: A file path
+  * beg: A start offset for the file
+  * end: An end offset for the file
+  * returns: A chunk or slice of the file contents
+  */
+char* read_slice(const char* path, off_t beg, off_t end) {
+
+  FILE *fp = fopen(path, "rb");
+
+  off_t filesize = file_size(path);
+  off_t chunksize = end - beg;
+
+  /* Allocate a buffer for the file contents on the heap */
+  void* buffer = malloc(chunksize + 1);
+  if (!buffer) {
+    printf("Could not allocate buffer of size %ld\n", chunksize + 1);
+    exit(1);
+  }
+
+  char *contents = (char*) buffer;
+  /* Read a slice of the file */
+
+  /* First we lseek to the given beginning offset of the file */
+  lseek(fp, beg, filesize);
+
+  /* Then we read the contents of the file up to the chunksize */
+  fread(contents, chunksize, 1, fp);
+
+  fclose(fp);
+  contents[filesize] = 0;
+  return contents;
+}
+
 void write_file(const char* path, const char* contents) {
    FILE *fp = fopen(path, "w");
 

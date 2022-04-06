@@ -2,6 +2,9 @@
 #ifndef FILE_H
 #define FILE_H
 
+/* https://linux.die.net/man/3/lseek64 */
+#define _FILE_OFFSET_BITS 64
+
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
@@ -13,6 +16,7 @@
 #include <tchar.h>
 #include <fileapi.h>
 #else
+#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #endif
@@ -25,6 +29,7 @@ bool file_exists(FILE* fp);
 off_t file_size (const char* filename);
 bool under_limit(const char* path, off_t size);
 char* read_file(const char* path);
+char* read_slice(const char* path, off_t beg, off_t end);
 void write_file(const char* path, const char* contents);
 #endif
 
