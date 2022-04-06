@@ -72,6 +72,8 @@ void write_file_should_not_be_null() {
     fclose(fp);
 }
 
+/* Add tests for big files >4 GiB here */
+
 /* Main runner */
 int main(void) {
     UNITY_BEGIN();
