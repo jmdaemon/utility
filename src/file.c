@@ -142,7 +142,8 @@ char* read_slice(const char* path, off_t beg, off_t end) {
   /* Read a slice of the file */
 
   /* First we lseek to the given beginning offset of the file */
-  lseek(fp, beg, filesize);
+  int fd = fileno(fp);
+  lseek(fd, beg, filesize);
 
   /* Then we read the contents of the file up to the chunksize */
   fread(contents, chunksize, 1, fp);
