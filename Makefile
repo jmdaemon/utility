@@ -26,14 +26,7 @@ SRCT = $(wildcard $(PATHT)*.c)
 CFLAGS = -Wall -Wextra
 LDFLAGS = 
 
-# Compiler Flags:
-# -MM : Output single header dependencies for the compile files
-# -MG : Run without being able to run into headers gcc can't find
-# -MF : Write header dependencies to a file
-COMPILE=gcc -c
-LINK=gcc
-DEPEND=gcc -MM -MG -MF
-CFLAGS=-I. -I$(PATHU) -I$(PATHS) -I$(INCLUDES) -DTEST
+include make/unity.mk
 
 #
 # Library
@@ -46,19 +39,6 @@ LIB_OBJS = $(LIB_SRCS:.c=.o)
 LIB = libutility.so
 LIB_PREFIX = lib
 
-#
-# Unit Tests
-#
-
-# Note: Our files will be named:
-# [source].c, test_[source].c
-# Due to these substitutions they must be named like this
-# in order for the tests to work and compile
-RESULTS = $(patsubst $(PATHT)test_%.c,$(PATHR)test_%.txt,$(SRCT) )
-
-PASSED = `grep -s PASS $(PATHR)*.txt`
-FAIL = `grep -s FAIL $(PATHR)*.txt`
-IGNORE = `grep -s IGNORE $(PATHR)*.txt`
 
 #
 # Build settings
@@ -99,42 +79,6 @@ BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH)/, $(LIB_OBJS))
 
 .PHONY: clean clean-test clean-lib test lib 
 
-test: $(BUILD_PATHS) $(RESULTS)
-	@echo "-----------------------\nIGNORES:\n-----------------------"
-	@echo "$(IGNORE)"
-	@echo "-----------------------\nFAILURES:\n-----------------------"
-	@echo "$(FAIL)"
-	@echo "-----------------------\nPASSED:\n-----------------------"
-	@echo "$(PASSED)"
-	@echo "\nDONE"
-
-
-# Rules for finding source files in sub directories
-
-# Create test results
-$(PATHR)%.txt: $(PATHB)%.$(TARGET_EXTENSION)
-	-./$< > $@ 2>&1
-
-# Link unit tests with the unity test framework and our sources
-$(PATHB)test_%.$(TARGET_EXTENSION): $(PATHO)test_%.o $(PATHO)%.o $(PATHU)unity.o
-	$(LINK) -o $@ $^
-
-# Compile unity sources
-$(PATHO)%.o:: $(PATHU)%.c $(PATHU)%.h
-	$(COMPILE) $(CFLAGS) $< -o $@
-
-# Compile files in src directory
-$(PATHO)%.o:: $(PATHS)%.c
-	$(COMPILE) $(CFLAGS) $< -o $@
-
-# Compile files in test directory
-$(PATHO)%.o:: $(PATHT)%.c
-	$(COMPILE) $(CFLAGS) $< -o $@
-
-# Create a depends directory
-$(PATHD)%.d:: $(PATHT)%.c
-	$(DEPEND) $@ $<
-
 #
 # Library Builds
 #
@@ -154,24 +98,6 @@ $(BUILD_PATH)/%.o: $(PATHS)%.c
 # Other rules
 #
 
-# Build paths
-
-# Create build/
-$(PATHB):
-	$(MKDIR) $(PATHB)
-
-# Create build/depends
-$(PATHD):
-	$(MKDIR) $(PATHD)
-
-# Create build/objs
-$(PATHO):
-	$(MKDIR) $(PATHO)
-
-# Create build/results
-$(PATHR):
-	$(MKDIR) $(PATHR)
-
 # Create build/{debug, release}
 $(BUILD_PATH):
 	$(MKDIR) $(BUILD_PATH)
@@ -185,15 +111,3 @@ clean: clean-test clean-lib
 clean-lib:
 	$(CLEANUP) $(BUILD_LIB)
 	$(CLEANUP) $(BUILD_LIB_OBJS)
-
-# Remove output files for tests
-clean-test:
-	$(CLEANUP) $(PATHO)*.o
-	$(CLEANUP) $(PATHB)*.$(TARGET_EXTENSION)
-	$(CLEANUP) $(PATHR)*.txt
-
-# Keep test results & output
-.PRECIOUS: $(PATHB)test_%.$(TARGET_EXTENSION)
-.PRECIOUS: $(PATHD)%.d
-.PRECIOUS: $(PATHO)%.o
-.PRECIOUS: $(PATHR)%.txt
