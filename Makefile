@@ -47,6 +47,14 @@ SP_INCLUDES =
 # Build as a library
 include make/library.mk
 
+install-lib-headers:
+	install $(PATHI)/file.h $(DESTDIR)$(PREFIX)/include/file.h
+	install $(PATHI)/command.h $(DESTDIR)$(PREFIX)/include/command.h
+
+uninstall-lib-headers:
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/file.h
+	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/command.h
+
 #
 # Other rules
 #
