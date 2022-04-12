@@ -1,23 +1,5 @@
 include make/os.mk
-
-#
-# Directories
-#
-# build/depends, build/objs, build/results are all used for building the unit tests
-
-PATHU = subprojects/unity/src/
-PATHS = src/
-PATHT = test/
-PATHB = build/
-PATHD = build/depends/
-PATHO = build/objs/
-PATHR = build/results/
-
-INCLUDES = include/
-
-BUILD_PATHS = $(PATHB) $(PATHD) $(PATHO) $(PATHR)
-
-SRCT = $(wildcard $(PATHT)*.c)
+include make/structure.mk
 
 #
 # Compile options
