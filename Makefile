@@ -5,8 +5,11 @@ include make/structure.mk
 # Compile options
 #
 
-CFLAGS = -Wall -Wextra
-LDFLAGS = 
+GLOBAL_CFLAGS = -Wall -Wextra
+GLOBAL_LDFLAGS = 
+
+# Include headers
+INCLUDES = -I. -I$(PATHI)
 
 include make/unity.mk
 
@@ -14,12 +17,22 @@ include make/unity.mk
 # Library
 #
 
-CFLAGS_LIB = -fPIC -g
-LDFLAGS_LIB = -shared
-LIB_SRCS = file.c command.c
-LIB_OBJS = $(LIB_SRCS:.c=.o)
-LIB = libutility.so
-LIB_PREFIX = lib
+#CFLAGS_LIB = -fPIC -g
+#LDFLAGS_LIB = -shared
+
+#LIB_SRCS = file.c command.c
+#LIB_OBJS = $(LIB_SRCS:.c=.o)
+#LIB = libutility.so
+#LIB_PREFIX = lib
+
+LIBRARY_SRCS = file.c command.c
+LIBRARY_OBJS = $(LIBRARY_SRCS:.c=.o)
+LIBRARY_NAME = libutility.so
+
+#LIB_PREFIX = lib
+
+include make/install.mk
+include make/config.mk
 
 
 #
@@ -38,58 +51,25 @@ TARGET=debug
 TARGET_FLAGS= -g -O0 -DDEBUG $(LDFLAGS)
 endif
 
-# Create build/{debug, release} paths
-BUILD_PATH = $(PATHB)$(TARGET)
-
-# Library build settings
-# -------------
-# LIBRARY_FLAGS: 	Library flags in release or debug configuration
-# BUILD_PATHL: 		The directory of the target library (build/{debug,release}/lib)
-# BUILD_LIB_OBJS: The object files of the library target (build/{debug,release}/*.o)
-
-LIBRARY_FLAGS = $(LDFLAGS) $(TARGET_FLAGS) $(CFLAGS_LIB) $(LDFLAGS_LIB) 
-
-BUILD_PATHL = $(BUILD_PATH)/$(LIB_PREFIX)
-BUILD_LIB = $(BUILD_PATHL)/$(LIB)
-BUILD_LIB_OBJS = $(addprefix $(BUILD_PATH)/, $(LIB_OBJS))
-
 # 
 # Rules
 #
 
-# Unit Tests
+.PHONY: all subprojects clean
 
+subprojects: 
+
+# SP_DEPENDS : Object files to be included into lib, bin targets
+# SP_INCLUDES: Header files to be included into lib,bin
+SP_DEPENDS =                                                    # Unit Tests
+SP_INCLUDES =
 .PHONY: clean clean-test clean-lib test lib 
 
-#
-# Library Builds
-#
-
-# Make the build paths for the library
-lib: $(BUILD_PATHL) $(BUILD_LIB)
-
-# Compiles the shared library target and its object files
-$(BUILD_LIB): $(BUILD_LIB_OBJS) 
-	$(CC) $(CFLAGS) $(LIBRARY_FLAGS) -o $@ $^
-
-# Compile all object targets in $(BUILD_PATH)
-$(BUILD_PATH)/%.o: $(PATHS)%.c
-	$(CC) -c $(CFLAGS) $(TARGET_FLAGS) -o $@ $<
+# Build as a library
+include make/library.mk
 
 #
 # Other rules
 #
 
-# Create build/{debug, release}
-$(BUILD_PATH):
-	$(MKDIR) $(BUILD_PATH)
-
-# Create build/{debug, release}/lib
-$(BUILD_PATHL):
-	$(MKDIR) $(BUILD_PATHL)
-
 clean: clean-test clean-lib
-
-clean-lib:
-	$(CLEANUP) $(BUILD_LIB)
-	$(CLEANUP) $(BUILD_LIB_OBJS)
