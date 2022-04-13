@@ -109,7 +109,7 @@ char* read_file(const char* path) {
   /* Allocate a buffer for the file contents on the heap */
   void* buffer = malloc(filesize + 1);
   if (!buffer) {
-    printf("Could not allocate buffer of size %ld\n", filesize + 1);
+    fprintf(stderr, "Could not allocate buffer of size %ld\n", filesize + 1);
     exit(1);
   }
 
@@ -139,7 +139,7 @@ char* read_slice(const char* path, off_t beg, off_t end) {
   /* Allocate a buffer for the file contents on the heap */
   void* buffer = malloc(chunksize + 1);
   if (!buffer) {
-    printf("Could not allocate buffer of size %ld\n", chunksize + 1);
+    fprintf(stderr, "Could not allocate buffer of size %ld\n", chunksize + 1);
     exit(1);
   }
 
@@ -162,7 +162,7 @@ void write_file(const char* path, const char* contents) {
    FILE *fp = fopen(path, "w");
    /* Check that file could be created */
    if (fp == NULL) {
-     printf("Could not create file\n");
+     fprintf(stderr, "Could not create file\n");
      exit(1);
    }
 

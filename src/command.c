@@ -8,7 +8,7 @@ char* exec(const char* command, off_t size) {
   /* Open the command for reading. */
   fp = popen(command, "r");
   if (fp == NULL) {
-    printf("Failed to run command\n" );
+    fprintf(stderr, "Failed to run command\n" );
     exit(1);
   }
 
