@@ -23,13 +23,13 @@ LARGE_INTEGER file_size (const char* filename) {
       OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
   if (INVALID_FILE_HANDLE == file) {
-    printf("Cannot open file %s: %s\n",
+    fprintf(stderr, "Cannot open file %s: %s\n",
             filename, strerror(errno));
     return -1;
   }
 
   if (!GetFileSizeEx(file, &file_size)) {
-    printf("Cannot determine size of %s: %s\n",
+    fprintf(stderr, "Cannot determine size of %s: %s\n",
             filename, strerror(errno));
     return -1;
 
@@ -70,7 +70,7 @@ off_t file_size(const char *filename) {
     if (stat(filename, &st) == 0)
         return st.st_size;
 
-    printf("Cannot determine size of %s: %s\n",
+    fprintf(stderr, "Cannot determine size of %s: %s\n",
             filename, strerror(errno));
 
     return -1;
