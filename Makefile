@@ -11,6 +11,10 @@ GLOBAL_LDFLAGS =
 # Include headers
 INCLUDES = -I. -I$(PATHI)
 
+#
+# Subprojects
+#
+
 include make/unity.mk
 
 #
@@ -59,4 +63,4 @@ uninstall-lib-headers:
 # Other rules
 #
 
-clean: clean-test clean-lib
+clean: clean-test clean-lib clean-subprojects clean-objs
