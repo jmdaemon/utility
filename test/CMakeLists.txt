@@ -20,8 +20,8 @@ add_test(test_${TARGET} ${TEST_NAME})
 
 # Create needed files for tests
 file(COPY ../LICENSE DESTINATION ${CMAKE_BINARY_DIR}/test)
-file(MAKE_DIRECTORY DESTINATION ${CMAKE_BINARY_DIR}/test/build/results) # Must exist at build time
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/test/build/results) # Must exist at build time
 
 # These files are needed when running ctest -V manually
 file(COPY ../LICENSE DESTINATION ${CMAKE_BINARY_DIR})
-file(MAKE_DIRECTORY DESTINATION ${CMAKE_BINARY_DIR}/build/results)
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/build/results)
