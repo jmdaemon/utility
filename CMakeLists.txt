@@ -6,8 +6,11 @@ project(
     DESCRIPTION "General purpose C utility library"
     LANGUAGES C)
 
-# Add option to build documentation. On by default
-option(BUILD_DOC "Build documentation" ON)
+option(BUILD_DOC "Build documentation" ON)              # Add option to build documentation. On by default
+
+# Logging
+set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
+set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
 
 # Use colored output
 if (NOT COLOR)
