@@ -58,7 +58,7 @@ if (DOXYGEN_FOUND)
     message("Doxygen build started")
 
     # Ensure that build/docs is created
-    file(MAKE_DIRECTORY DESTINATION ${PROJECT_SOURCE_DIR}/build/docs)
+    file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/build/docs)
 
     # Note the option ALL builds the docs together with the other targets
     add_custom_target(doc ALL
