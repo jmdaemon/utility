@@ -82,13 +82,16 @@ set(CMAKE_INSTALL_PREFIX /usr/local)
 # cmake uninstall .
 # sudo make uninstall or sudo ninja uninstall
 if(NOT TARGET uninstall)
-    configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
-        IMMEDIATE @ONLY)
+    file(TO_CMAKE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in" UNINSTALL_MODULE)
+    if(EXISTS "${UNINSTALL_MODULE}")
+        configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+            "${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake"
+            IMMEDIATE @ONLY)
 
-    add_custom_target(uninstall
-        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
+        add_custom_target(uninstall
+            COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake/cmake_uninstall.cmake)
+    endif()
 endif()
 
 if ((TARGET uninstall) AND (EXISTS "${LOC_PATH}"))
