@@ -6,6 +6,9 @@ project(
     DESCRIPTION "General purpose C utility library"
     LANGUAGES C)
 
+# Add option to build documentation. On by default
+option(BUILD_DOC "Build documentation" ON)
+
 # Use colored output
 if (NOT COLOR)
     # Don't use colored output
@@ -46,6 +49,36 @@ if(BUILD_TESTING)
     include(CTest)
     add_subdirectory(test)
 endif()
+
+# Documentation
+# Check if Doxygen is installed
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+    #set(DOXYGEN_IN ${PROJECT_SOURCE_DIR}/Doxyfile)
+    #set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
+    #set(DOXYGEN_OUT ${CMAKE_BINARY_DIR}/Doxyfile)
+    #configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    #configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    #file(COPY ${DOXYGEN_IN} DESTINATION ${DOXYGEN_OUT})
+    file(COPY Doxyfile DESTINATION ${CMAKE_BINARY_DIR})
+    message("Doxygen build started")
+
+    # Ensure that build/docs is created
+    file(MAKE_DIRECTORY DESTINATION ${PROJECT_SOURCE_DIR}/build/docs)
+    #file(MAKE_DIRECTORY DESTINATION ${CMAKE_BINARY_DIR}/build/docs)
+    #file(MAKE_DIRECTORY build/docs)
+
+    # Note the option ALL builds the docs together with the other targets
+    add_custom_target(doc ALL
+        #COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
+        #WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/build/docs
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM)
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
 
 # Manual Installs
 # Set default manual installation directory to /usr/local
