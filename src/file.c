@@ -154,7 +154,6 @@ char* read_slice(const char* path, off_t beg, off_t end) {
   fread(contents, chunksize, 1, fp);
 
   fclose(fp);
-  contents[filesize] = 0;
   return contents;
 }
 
