@@ -2,6 +2,17 @@
 
 General purpose C utility library
 
+## Goals
+
+### File
+
+The goals of `file` are simple. The library must
+
+- Be able to handle file sizes > 2GiB
+- Be compatible on at least Windows and Linux (ideally more).
+- Optionally offer useful variants that may be faster, or safer.
+- Must also build on Windows.
+
 ## Building
 
 To build this project run:
