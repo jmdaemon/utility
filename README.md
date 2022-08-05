@@ -15,45 +15,83 @@ The goals of `file` are simple. The library must
 
 ## Building
 
-To build this project run:
+### Make
 
+To build with make:
+
+``` bash
+make release lib
 ```
-make lib
+
+This creates `build/release/libutility.so`.
+
+To install the library:
+
+``` bash
+sudo make install
 ```
 
-There should be a library `libutility.so` in `build/release/lib/`.
+This installs the library to `/usr/local/`, if you want to install to `/usr/` instead, run:
 
-Then you can include your dependency into your project like so
+``` bash
+PREFIX=/usr/ sudo make install 
+```
 
+If you want to uninstall the library:
+
+``` bash
+sudo make uninstall
+```
+
+### CMake
+
+To build with CMake:
+``` bash
+cmake --preset gcc-release-unix-makefiles
+cd build/gcc-debug-unix-makefiles
+make
+```
+
+To install the library:
+
+``` bash
+sudo cmake --install .
+```
+
+This installs the library to `/usr/local/`, if you want to install to `/usr/` instead, run:
+
+``` bash
+sudo cmake --install --prefix /usr
+```
+
+If you want to uninstall the library:
+
+``` bash
+cmake uninstall .
+sudo make uninstall
+```
+
+## Using as a Subproject
+
+If you are building Utility directly as a subproject in your build system.
+See below for more details.
 
 ## Make
-
-For Make you can include this library into your build system with:
-
-Note that this assumes utility is in a `subprojects` directory.
-
-``` Make
-CFLAGS = ... -Isubprojects/utility/include
-LDFLAGS = -Lsubprojects/utility/build/release/lib -llibutility
-```
+To integrate with a Makefile project. Be sure to include the
+library's headers in `include` with `-Iutility/include` during compilation,
+and link to Utility with `-llibutility`.
 
 ## CMake
 
-This assumes that utility is in subprojects directory.
-
-You can add utility with:
-
-``` CMake
-set(UTILITY_HEADERS subprojects/utility/include)
-set(UTILITY_LIB subprojects/utility/build/release/lib)
-find_library(utility
-             NAMES utility
-             HINTS ${UTILITY_LIB})
-
-if(NOT utility)
-  message(FATAL_ERROR "Utility library not found!")
-endif()
-
-target_include_directories(${PROJECT_EXECUTABLE} PUBLIC ${UTILITY_HEADERS})
-target_link_libraries(${PROJECT_EXECUTABLE} utility)
+You can include `Utility` by using FetchContent:
+``` cmake
+FetchContent_Declare(utility
+    GIT_REPOSITORY  https://github.com/jmdaemon/utility)
+FetchContent_MakeAvailable(${LIB_NAME})
 ```
+
+Or, if you are bundling it directly in your project:
+``` cmake
+add_subdirectory("subprojects/utility")
+```
+Note that this method assumes that the source is in a directory called `subprojects/utility`.
