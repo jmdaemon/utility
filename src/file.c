@@ -107,7 +107,7 @@ char* read_file(const char* path) {
   off_t filesize = file_size(path);
 
   /* Allocate a buffer for the file contents on the heap */
-  void* buffer = malloc(filesize + 1);
+  void* buffer = calloc(1, filesize + 1);
   if (!buffer) {
     fprintf(stderr, "Could not allocate buffer of size %ld\n", filesize + 1);
     exit(1);
@@ -137,14 +137,14 @@ char* read_slice(const char* path, off_t beg, off_t end) {
   off_t chunksize = end - beg;
 
   /* Allocate a buffer for the file contents on the heap */
-  void* buffer = malloc(chunksize + 1);
+  void* buffer = calloc(1, chunksize + 1);
   if (!buffer) {
     fprintf(stderr, "Could not allocate buffer of size %ld\n", chunksize + 1);
     exit(1);
   }
 
-  char *contents = (char*) buffer;
   /* Read a slice of the file */
+  char *contents = (char*) buffer;
 
   /* First we lseek to the given beginning offset of the file */
   int fd = fileno(fp);
