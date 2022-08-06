@@ -50,7 +50,7 @@ endif()
 # Generate automatic docs with Doxygen
 include(Docs)
 
-# Manually install binaries
+# Install build artifacts system-wide
 include(Install)
 
 # Packages
