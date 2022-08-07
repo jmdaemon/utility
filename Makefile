@@ -3,6 +3,8 @@
 include make/os.mk
 include make/structure.mk
 include make/config.mk
+include make/install.mk
+include make/templates.mk
 
 #
 # Compile options
@@ -30,7 +32,6 @@ LIBRARY_SRCS = file.c command.c utility.c
 LIBRARY_OBJS = $(LIBRARY_SRCS:.c=.o)
 LIBRARY_NAME = libutility.so
 
-include make/install.mk
 
 # 
 # Rules
@@ -43,18 +44,13 @@ subprojects:
 # Build as a library
 include make/library.mk
 
-install-lib-headers:
-	install $(PATHI)/file.h $(DESTDIR)$(PREFIX)/include/file.h
-	install $(PATHI)/command.h $(DESTDIR)$(PREFIX)/include/command.h
-	install $(PATHI)/utility.h $(DESTDIR)$(PREFIX)/include/utility.h
+# Build documentation
+include make/docs.mk
 
-uninstall-lib-headers:
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/file.h
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/command.h
-	$(CLEANUP) $(DESTDIR)$(PREFIX)/include/utility.h
+# Install/Uninstall rules
+install-subprojects: $(INSTALL_SP_TARGET)
+uninstall-subprojects: $(UNINSTALL_SP_TARGET)
 
-#
-# Other rules
-#
-
-clean: clean-test clean-lib clean-subprojects clean-objs
+# Clean specific output files
+clean: $(CLEAN_TARGET)
+clean-subprojects: $(CLEAN_SP_TARGET)
