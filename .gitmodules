@@ -7,3 +7,6 @@
 [submodule "cmake"]
 	path = cmake
 	url = https://github.com/jmdaemon/cmake-modules
+[submodule "themes/doxygen-awesome-css"]
+	path = themes/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
