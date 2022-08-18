@@ -7,6 +7,9 @@
 extern "C" {
 #endif
 
+/* Enable GNU C Extensions */
+#define _GNU_SOURCE
+
 /* https://linux.die.net/man/3/lseek64 */
 #define _FILE_OFFSET_BITS 64
 
@@ -15,6 +18,9 @@ extern "C" {
 #include <errno.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stddef.h>
+
+#include <fcntl.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -24,6 +30,7 @@ extern "C" {
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/mman.h>
 #endif
 
 #ifdef _WIN32
@@ -37,6 +44,7 @@ char* read_file(const char* path);
 char* read_slice(const char* path, off_t beg, off_t end);
 void write_file(const char* path, const char* contents, const char* mode);
 void append_file(const char* src, const char* dest);
+size_t find_str_offset(const char* src, const char* search_term);
 #endif
 
 #ifdef __cplusplus

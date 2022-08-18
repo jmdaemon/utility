@@ -190,4 +190,31 @@ void append_file(const char* src, const char* dest) {
   fclose(pdest);
 }
 
+/** Finds the first occurence of a substring in a large file.
+  Note that this function does not account for repeated occurences. */
+size_t find_str_offset(const char* src, const char* search_term) {
+  int fd = open(src, O_RDONLY);
+  size_t length = lseek(fd, 0, SEEK_END);
+  void *data = mmap(NULL, length, PROT_READ, MAP_PRIVATE, fd, 0);
+
+  if (data == NULL) {
+    fprintf(stderr, "mmap() failed.\n");
+    close(fd);
+    exit(1);
+  }
+
+  void *ptr = memmem(data, length, search_term, strlen(search_term));
+
+  if (ptr == NULL) {
+    fprintf(stderr, "memmem() failed.\n");
+    close(fd);
+    exit(1);
+  }
+
+  size_t offset = ptr - data;
+  munmap(data, length);
+  close(fd);
+  return offset;
+}
+
 #endif
