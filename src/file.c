@@ -157,6 +157,7 @@ char* read_slice(const char* path, off_t beg, off_t end) {
   return contents;
 }
 
+/** Write a string to the file specified by path */
 void write_file(const char* path, const char* contents) {
    FILE *fp = fopen(path, "w");
    /* Check that file could be created */
@@ -168,4 +169,25 @@ void write_file(const char* path, const char* contents) {
    fprintf(fp, "%s", contents);
    fclose(fp);
 }
+
+/** Appends the contents of one file to another file. */
+void append_file(const char* src, const char* dest) {
+  FILE *psrc, *pdest;
+  char buffer[256];
+
+  psrc  = fopen(src, "r");
+  pdest = fopen(dest, "a");
+
+  if(psrc == NULL)
+    fprintf(stderr, "Error reading file: %s\n", src);
+  else
+    // Read from src
+    while(fgets(buffer, sizeof(buffer), psrc))
+      // Append to dest
+      fprintf(pdest, "%s", buffer);
+
+  fclose(psrc);
+  fclose(pdest);
+}
+
 #endif

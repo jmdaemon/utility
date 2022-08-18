@@ -36,6 +36,7 @@ bool under_limit(const char* path, off_t size);
 char* read_file(const char* path);
 char* read_slice(const char* path, off_t beg, off_t end);
 void write_file(const char* path, const char* contents);
+void append_file(const char* src, const char* dest);
 #endif
 
 #ifdef __cplusplus
