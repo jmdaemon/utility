@@ -158,8 +158,8 @@ char* read_slice(const char* path, off_t beg, off_t end) {
 }
 
 /** Write a string to the file specified by path */
-void write_file(const char* path, const char* contents) {
-   FILE *fp = fopen(path, "w");
+void write_file(const char* path, const char* contents, const char* mode) {
+   FILE *fp = fopen(path, mode);
    /* Check that file could be created */
    if (fp == NULL) {
      fprintf(stderr, "Could not create file\n");

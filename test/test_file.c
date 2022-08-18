@@ -64,7 +64,7 @@ void write_file_should_not_be_null() {
 
     }
     const char* contents = "This file should not be null";
-    write_file(path, contents);
+    write_file(path, contents, "w");
     TEST_ASSERT_TRUE(file_exists(path));
 }
 
