@@ -115,6 +115,8 @@ char* read_file(const char* path) {
 
   char *contents = (char*) buffer;
   fread(contents, filesize, 1, fp);
+  /* Reset file descriptor */
+  lseek(fileno(fp), 0, SEEK_SET);
   fclose(fp);
   contents[filesize] = 0;
   return contents;
@@ -152,6 +154,9 @@ char* read_slice(const char* path, off_t beg, off_t end) {
 
   /* Then we read the contents of the file up to the chunksize */
   fread(contents, chunksize, 1, fp);
+
+  /* Reset file descriptor */
+  lseek(fd, 0, SEEK_SET);
 
   fclose(fp);
   return contents;
@@ -213,6 +218,8 @@ size_t find_str_offset(const char* src, const char* search_term) {
 
   size_t offset = ptr - data;
   munmap(data, length);
+  /* Reset file descriptor */
+  lseek(fd, 0, SEEK_SET);
   close(fd);
   return offset;
 }
