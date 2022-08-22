@@ -6,11 +6,13 @@ project(
     DESCRIPTION "General purpose C utility library"
     LANGUAGES C)
 
-# Variable Toggles
-set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
-set(BUILD_DOC ON CACHE INTERNAL "Build documentation")
-set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
-set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
+if (NOT USE_AS_SUBPROJECT)
+    # Variable Toggles
+    set(NO_COLOR OFF CACHE INTERNAL "Toggles colored output errors")
+    set(BUILD_DOC ON CACHE INTERNAL "Build documentation")
+    set(ENABLE_LOGGING OFF CACHE INTERNAL "View the logging statements/debug info")
+    set(LOG_LEVEL 0 CACHE INTERNAL "Enable only specific log levels")
+endif()
 
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
