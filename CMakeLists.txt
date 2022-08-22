@@ -43,7 +43,7 @@ include(FetchContent)
 add_subdirectory(subprojects)
 add_subdirectory(src)
 
-if(BUILD_TESTING)
+if(BUILD_TESTING AND NOT USE_AS_SUBPROJECT)
     include(Unity)
     include(CTest)
     add_subdirectory(test)
