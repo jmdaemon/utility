@@ -39,6 +39,8 @@ set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
 # Include dependencies
 include(FetchContent)
 
+set(PKG_DEPENDS pcre)
+
 # Add subdirectories
 add_subdirectory(subprojects)
 add_subdirectory(src)
