@@ -1,5 +1,11 @@
+# Ignore build outupt
 build
 compile_commands.json
+
+# Ignore releases
+_packages
+archive/*
+
 # Prerequisites
 *.d
 

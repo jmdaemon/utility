@@ -37,7 +37,7 @@ set(INCLUDES_DIR "${PROJECT_SOURCE_DIR}/include")
 set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
 
 # Include dependencies
-include(FetchContent)
+include(Library)
 
 # Specify project dependencies
 # PKG_DEPENDS: Library names to link the output files
