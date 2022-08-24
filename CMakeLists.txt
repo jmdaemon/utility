@@ -16,7 +16,7 @@ endif()
 
 # Require out-of-source builds
 file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
-if(EXISTS "${LOC_PATH}")
+if (EXISTS "${LOC_PATH}")
     message(FATAL_ERROR "You cannot build in a source directory (or any directory with "
                         "CMakeLists.txt file). Please make a build subdirectory. Feel free to "
                         "remove CMakeCache.txt and CMakeFiles.")
@@ -39,19 +39,22 @@ set(HEADERS_VERSION "${PROJECT_BINARY_DIR}/include")
 # Include dependencies
 include(FetchContent)
 
+# Specify project dependencies
+# PKG_DEPENDS: Library names to link the output files
+# DEB_DEPENDS: Debian packages that provide the libraries the project depends upon
 set(PKG_DEPENDS pcre)
+set(DEB_DEPENDS libc pcre)
 
 # Add subdirectories
-add_subdirectory(subprojects)
-add_subdirectory(src)
+subdirs(subprojects src)
 
-if(BUILD_TESTING AND NOT USE_AS_SUBPROJECT)
+if (BUILD_TESTING AND NOT USE_AS_SUBPROJECT)
     include(Unity)
     include(CTest)
     add_subdirectory(test)
 endif()
 
-if(NOT USE_AS_SUBPROJECT)
+if (NOT USE_AS_SUBPROJECT)
     # Generate automatic docs with Doxygen
     include(Docs)
 
