@@ -54,11 +54,11 @@ endif()
 if(NOT USE_AS_SUBPROJECT)
     # Generate automatic docs with Doxygen
     include(Docs)
+
+    # Install build artifacts system-wide
+    include(Install)
+
+    # Packages
+    include(InstallRequiredSystemLibraries)
+    include(Debian)
 endif()
-
-# Install build artifacts system-wide
-include(Install)
-
-# Packages
-include(InstallRequiredSystemLibraries)
-include(Debian)
