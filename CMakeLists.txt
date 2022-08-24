@@ -51,8 +51,10 @@ if(BUILD_TESTING AND NOT USE_AS_SUBPROJECT)
     add_subdirectory(test)
 endif()
 
-# Generate automatic docs with Doxygen
-include(Docs)
+if(NOT USE_AS_SUBPROJECT)
+    # Generate automatic docs with Doxygen
+    include(Docs)
+endif()
 
 # Install build artifacts system-wide
 include(Install)
