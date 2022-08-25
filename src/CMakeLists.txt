@@ -1,6 +1,6 @@
 set(HEADERS ${INCLUDES_DIR})
 set(TARGET utility)
-set(SRCS utility.c file.c command.c)
+set(SRCS utility.c file.c command.c progressbar.c)
 
 make_ssl(
     NAME ${TARGET}
