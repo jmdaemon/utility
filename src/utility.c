@@ -1,6 +1,6 @@
 #include "utility.h"
 
-/** Returns "true" if a condition is true else "false".
+/*! Returns "true" if a condition is true else "false".
   Useful for printing/logging a boolean condition with printf */
 const char* is_true(bool cond) {
   const char* is_true = cond ? "true" : "false";
@@ -53,4 +53,30 @@ bool found_in(const char *elem, const char *array[], int array_size) {
 bool smatch(const char* input, const char* pattern) {
   bool is_equal = (strcmp(input, pattern) == 0) ? true : false;
   return is_equal;
+}
+
+/*! Converts a time struct hours into 12 hour time */
+int to12hour(struct tm * ptm) {
+  return ptm->tm_hour - 12;
+}
+
+/*! Converts a time struct hours into 24 hour time */
+int to24hour(struct tm * ptm) {
+  return ptm->tm_hour + 12;
+}
+
+/* Get the current time */
+time_t get_time() {
+    time_t rawtime;
+    time (&rawtime);
+    return rawtime;
+}
+
+/* Create the local timestamp string from a time. */
+char* ltimestamp (time_t rawtime) {
+    struct tm * ptm;
+    ptm = gmtime (&rawtime);
+    char* result = (char*)malloc(5 * sizeof(char));
+    sprintf (result, "%2d:%02d", (to12hour(ptm))%24, ptm->tm_min);
+    return result;
 }
