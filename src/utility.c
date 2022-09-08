@@ -57,26 +57,34 @@ bool smatch(const char* input, const char* pattern) {
 
 /*! Converts a time struct hours into 12 hour time */
 int to12hour(struct tm * ptm) {
-  return ptm->tm_hour - 12;
+  int result = 0;
+  if (ptm->tm_hour > 12) {
+    result = ptm->tm_hour - 12;
+  } else if (ptm->tm_hour <= 12) {
+    result = ptm->tm_hour;
+  }
+  return result;
 }
 
 /*! Converts a time struct hours into 24 hour time */
 int to24hour(struct tm * ptm) {
-  return ptm->tm_hour + 12;
+  /*return ptm->tm_hour + 12;*/
+  return ptm->tm_hour;
 }
 
 /* Get the current time */
 time_t get_time() {
-    time_t rawtime;
-    time (&rawtime);
-    return rawtime;
+    time_t t = time(NULL);
+    return t;
 }
 
 /* Create the local timestamp string from a time. */
-char* ltimestamp(time_t rawtime) {
-    struct tm * ptm;
-    ptm = gmtime (&rawtime);
-    char* result = (char*)malloc(5 * sizeof(char));
-    sprintf (result, "%2d:%02d", (to12hour(ptm))%24, ptm->tm_min);
+char* ltimestamp(time_t t) {
+    struct tm lt = {0};
+    /*ptm = gmtime (&rawtime);*/
+    localtime_r(&t, &lt);
+    char* result = (char*) malloc(5 * sizeof(char));
+    /*sprintf (result, "%2d:%02d", (to12hour(lt))%24, ptm->tm_min);*/
+    sprintf (result, "%2d:%02d", lt.tm_hour, lt.tm_min);
     return result;
 }

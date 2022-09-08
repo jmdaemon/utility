@@ -1,4 +1,5 @@
 set(HEADERS ${INCLUDES_DIR} ${HEADERS_UNITY})
+set(TEST_DEPS unity utility_static)
 
 # Note that if you want to include more tests, create an executable and add them with add_test()
 
@@ -10,11 +11,10 @@ file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/build/results)
 set(TARGET file)
 set(TEST_NAME test_${TARGET})
 add_executable(${TEST_NAME} test_file.c)
-target_link_libraries(${TEST_NAME} PRIVATE unity utility_static)
+target_link_libraries(${TEST_NAME} PRIVATE ${TEST_DEPS})
 target_include_directories(${TEST_NAME} PUBLIC ${HEADERS})
 add_test(
     NAME ${TEST_NAME}
-    #WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     COMMAND ${TEST_NAME})
 
@@ -22,10 +22,9 @@ add_test(
 set(TARGET utility)
 set(TEST_NAME test_${TARGET})
 add_executable(${TEST_NAME} test_utility.c)
-target_link_libraries(${TEST_NAME} PRIVATE unity utility_static)
+target_link_libraries(${TEST_NAME} PRIVATE ${TEST_DEPS})
 target_include_directories(${TEST_NAME} PUBLIC ${HEADERS})
 add_test(
     NAME ${TEST_NAME}
-    #WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     COMMAND ${TEST_NAME})
