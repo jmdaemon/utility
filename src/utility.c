@@ -73,7 +73,7 @@ time_t get_time() {
 }
 
 /* Create the local timestamp string from a time. */
-char* ltimestamp (time_t rawtime) {
+char* ltimestamp(time_t rawtime) {
     struct tm * ptm;
     ptm = gmtime (&rawtime);
     char* result = (char*)malloc(5 * sizeof(char));

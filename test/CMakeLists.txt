@@ -14,5 +14,18 @@ target_link_libraries(${TEST_NAME} PRIVATE unity utility_static)
 target_include_directories(${TEST_NAME} PUBLIC ${HEADERS})
 add_test(
     NAME ${TEST_NAME}
-    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    #WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    COMMAND ${TEST_NAME})
+
+# utility
+set(TARGET utility)
+set(TEST_NAME test_${TARGET})
+add_executable(${TEST_NAME} test_utility.c)
+target_link_libraries(${TEST_NAME} PRIVATE unity utility_static)
+target_include_directories(${TEST_NAME} PUBLIC ${HEADERS})
+add_test(
+    NAME ${TEST_NAME}
+    #WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+    WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
     COMMAND ${TEST_NAME})
