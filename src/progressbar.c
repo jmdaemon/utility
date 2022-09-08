@@ -19,7 +19,9 @@ void draw_progress_bar (ProgressBar* p, time_t time_beg, time_t time_end) {
     printf("\r");
 
     /** Print the current timestamp and the end timestamp */
-    printf("%s / %s ", ltimestamp(time_beg), ltimestamp(time_end));
+    const char *t_current   = ltimestamp(time_beg);
+    const char *t_end       = ltimestamp(time_end);
+    printf("%s / %s ", t_current, t_end);
 
     /** Print the left margin char. */
     printf("%c", p->leftmargin);
@@ -41,4 +43,8 @@ void draw_progress_bar (ProgressBar* p, time_t time_beg, time_t time_end) {
 
     /** Show the updated progress bar */
     fflush(stdout);
+
+    /** Deallocate */
+    free((void*) t_current);
+    free((void*) t_end);
 }

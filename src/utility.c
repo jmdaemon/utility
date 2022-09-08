@@ -55,17 +55,18 @@ bool smatch(const char* input, const char* pattern) {
   return is_equal;
 }
 
-/* Get the current time */
+/*! Get the current time */
 time_t get_time() {
     time_t t = time(NULL);
     return t;
 }
 
-/* Create the local timestamp string from a time. */
+/*! Create the local timestamp string from a time.
+    Note that the caller is responsible for freeing the allocated string. */
 char* ltimestamp(time_t t) {
     struct tm lt = {0};
     localtime_r(&t, &lt);
     char* result = (char*) malloc(5 * sizeof(char));
-    sprintf (result, "%2d:%02d", lt.tm_hour, lt.tm_min);
+    sprintf(result, "%2d:%02d", lt.tm_hour, lt.tm_min);
     return result;
 }
