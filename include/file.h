@@ -26,6 +26,9 @@ extern "C" {
 #include <windows.h>
 #include <tchar.h>
 #include <fileapi.h>
+#include <io.h>
+#define F_OK 0
+#define access _access
 #else
 #include <unistd.h>
 #include <sys/stat.h>

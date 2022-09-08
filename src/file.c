@@ -46,9 +46,7 @@ LARGE_INTEGER file_size (const char* filename) {
   * returns: True if the file is not null, and false otherwise
   */
 bool file_exists(const char* path) {
-  FILE* fp = fopen(path, "rb");
-  bool result = (fp == NULL) ? false : true;
-  fclose(fp);
+  bool result = (access(path, F_OK) == 0) ? true : false;
   return result;
 }
 
