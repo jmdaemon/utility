@@ -23,9 +23,7 @@ bool smatch(const char* input, const char* pattern);
 
 /* Time */
 time_t get_time();
-char* ltimestamp(time_t rawtime);
-int to12hour(struct tm * ptm);
-int to24hour(struct tm * ptm);
+char* ltimestamp(time_t t);
 
 #ifdef __cplusplus
 }
