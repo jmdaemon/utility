@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
     utility
-    VERSION 1.5.0
+    VERSION 1.6.0
     DESCRIPTION "General purpose C utility library"
     LANGUAGES C)
 
