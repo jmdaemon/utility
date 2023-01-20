@@ -1,5 +1,5 @@
 project('utility', 'c',
-  version: '1.4.0')
+  version: '1.7.0')
 
 # Dependencies
 dep_pcre = dependency('libpcre')
