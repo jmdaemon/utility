@@ -6,6 +6,10 @@ include make/config.mk
 include make/install.mk
 include make/templates.mk
 
+VERSION_MAJOR = 1
+VERSION_MINOR = 14
+VERSION_PATCH = 0
+
 #
 # Compile options
 #
